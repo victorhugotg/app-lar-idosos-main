@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Relatório</title>
+</head>
+<body>
+    <h2>Adicionar Relatório para {{ paciente.nome }}</h2>
+    <form action="" method="POST">
+        <label for="data">Data:</label>
+        <input type="date" id="data" name="data" required><br><br>
+
+        <label for="responsavel">Responsável (Nome e Função):</label>
+        <input type="text" id="responsavel" name="responsavel" required><br><br>
+
+        <h3>1. Sinais Vitais:</h3>
+        <label for="pressao">Pressão Arterial:</label>
+        <input type="text" id="pressao" name="pressao" required><br><br>
+        <label for="frequencia_cardiaca">Frequência Cardíaca:</label>
+        <input type="text" id="frequencia_cardiaca" name="frequencia_cardiaca" required><br><br>
+        <label for="temperatura">Temperatura:</label>
+        <input type="text" id="temperatura" name="temperatura" required><br><br>
+
+        <h3>2. Estado Geral:</h3>
+        <label for="consciencia">Consciência:</label>
+        <input type="text" id="consciencia" name="consciencia" required><br><br>
+        <label for="dor">Dor (intensidade de 0 a 10):</label>
+        <input type="text" id="dor" name="dor" required><br><br>
+
+        <h3>3. Alimentação e Hidratação:</h3>
+        <label for="refeicoes">Refeições (porcentagem ingerida):</label>
+        <input type="text" id="refeicoes" name="refeicoes" required><br><br>
+        <label for="hidratacao">Hidratação:</label>
+        <input type="text" id="hidratacao" name="hidratacao" required><br><br>
+
+        <h3>4. Registro de Alimentação</h3>
+        <form method="POST">
+            <div class="meal-option">
+                <label>
+                    <input type="checkbox" id="cafeDaManha" onchange="toggleInput('cafeDaManhaInput', this.checked)">
+                    Café da Manhã
+                </label>
+                <input type="text" id="cafeDaManhaInput" name="cafe_da_manha" placeholder="Escreva aqui..." disabled>
+            </div>
+
+            <div class="meal-option">
+                <label>
+                    <input type="checkbox" id="almoco" onchange="toggleInput('almocoInput', this.checked)">
+                    Almoço
+                </label>
+                <input type="text" id="almocoInput" name="almoco" placeholder="Escreva aqui..." disabled>
+            </div>
+
+            <div class="meal-option">
+                <label>
+                    <input type="checkbox" id="cafeDaTarde" onchange="toggleInput('cafeDaTardeInput', this.checked)">
+                    Café da Tarde
+                </label>
+                <input type="text" id="cafeDaTardeInput" name="cafe_da_tarde" placeholder="Escreva aqui..." disabled>
+            </div>
+
+            <div class="meal-option">
+                <label>
+                    <input type="checkbox" id="jantar" onchange="toggleInput('jantarInput', this.checked)">
+                    Jantar
+                </label>
+                <input type="text" id="jantarInput" name="jantar" placeholder="Escreva aqui..." disabled>
+            </div>
+
+            <button type="submit">Salvar</button>
+        </form>
+
+
+        <h3>5. Mobilidade e Higiene:</h3>
+        <label for="mobilidade">Mobilidade:</label>
+        <input type="text" id="mobilidade" name="mobilidade" required><br><br>
+        <label for="higiene">Higiene (fraldas trocadas, etc.):</label>
+        <input type="text" id="higiene" name="higiene" required><br><br>
+
+        <h3>6. Medicamentos:</h3>
+        <textarea id="medicamentos" name="medicamentos" rows="4" required></textarea><br><br>
+
+        <h3>7. Observações:</h3>
+        <textarea id="observacoes" name="observacoes" rows="4"></textarea><br><br>
+
+        <input type="submit" value="Salvar Relatório">
+    </form>
+
+    <a href="{{ url_for('ver_relatorios', cpf=paciente.cpf) }}">Voltar para Relatórios</a>
+</body>
+</html>
