@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'  # Necessário para usar sessões
@@ -129,8 +130,7 @@ def ver_relatorios():
 
     return render_template("ver_relatorios.html", paciente=paciente)
 
-from datetime import datetime
-
+# Página para adicionar relatório
 @app.route("/adicionar_relatorio/<cpf>", methods=["GET", "POST"])
 def adicionar_relatorio(cpf):
     paciente = next((p for p in pacientes if p["cpf"] == cpf), None)
@@ -139,51 +139,89 @@ def adicionar_relatorio(cpf):
         return "<h1>Paciente não encontrado.</h1><a href='/home'>Voltar ao início</a>"
 
     if request.method == "POST":
-        print(request.form)  # Para verificar o que está sendo enviado
-        
         try:
-            data = request.form["data"]
-            hora = datetime.now().strftime("%H:%M")  # Captura a hora atual
-            responsavel = request.form["responsavel"]  # Você pode modificar para usar 'admin1'
-            sinais_vitais = {
-                "pressao": request.form["pressao"],
-                "frequencia_cardiaca": request.form["frequencia_cardiaca"],
-                "temperatura": request.form["temperatura"]
-            }
-            estado_geral = {
-                "consciencia": request.form["consciencia"],
-                "dor": request.form["dor"]
-            }
-            alimentacao_hidratacao = {
-                "refeicoes": request.form["refeicoes"],
-                "hidratacao": request.form["hidratacao"]
-            }
-            mobilidade_higiene = {
-                "mobilidade": request.form["mobilidade"],
-                "higiene": request.form["higiene"]
-            }
-            medicamentos = request.form["medicamentos"]
-            observacoes = request.form["observacoes"]
+            # Captura os dados do formulário
+            data = request.form.get("data")
+            responsavel = request.form.get("responsavel")
+            pressao = request.form.get("pressao")
+            frequencia_cardiaca = request.form.get("frequencia_cardiaca")
+            temperatura = request.form.get("temperatura")
+            consciencia = request.form.get("consciencia")
+            dor = request.form.get("dor")
+            mobilidade = request.form.get("mobilidade")
+            higiene = request.form.get("higiene")
+            medicamentos = request.form.get("medicamentos")
+            observacoes = request.form.get("observacoes")
 
+            # Alimentação e hidratação
+            cafe_da_manha = request.form.get("cafe_da_manha")
+            almoco = request.form.get("almoco")
+            cafe_da_tarde = request.form.get("cafe_da_tarde")
+            jantar = request.form.get("jantar")
+            hidratacao = request.form.get("hidratacao")
+
+            # Verificação se algum campo essencial está ausente
+            if not all([data, responsavel, pressao, frequencia_cardiaca, temperatura, consciencia, dor, mobilidade, higiene, medicamentos]):
+                return "<h1>Erro: Todos os campos obrigatórios devem ser preenchidos.</h1>"
+
+            # Criação do relatório
             relatorio = {
                 "data": data,
-                "hora": hora,  # Adiciona a hora ao relatório
+                "hora": datetime.now().strftime("%H:%M"),
                 "responsavel": responsavel,
-                "sinais_vitais": sinais_vitais,
-                "estado_geral": estado_geral,
-                "alimentacao_hidratacao": alimentacao_hidratacao,
-                "mobilidade_higiene": mobilidade_higiene,
+                "sinais_vitais": {
+                    "pressao": pressao,
+                    "frequencia_cardiaca": frequencia_cardiaca,
+                    "temperatura": temperatura
+                },
+                "estado_geral": {
+                    "consciencia": consciencia,
+                    "dor": dor
+                },
+                "alimentacao_hidratacao": {
+                    "refeicoes": {
+                        "cafe_da_manha": {
+                            "nome": cafe_da_manha,
+                            "observacoes": request.form.get("cafe_da_manha_obs", "")
+                        },
+                        "almoco": {
+                            "nome": almoco,
+                            "observacoes": request.form.get("almoco_obs", "")
+                        },
+                        "cafe_da_tarde": {
+                            "nome": cafe_da_tarde,
+                            "observacoes": request.form.get("cafe_da_tarde_obs", "")
+                        },
+                        "jantar": {
+                            "nome": jantar,
+                            "observacoes": request.form.get("jantar_obs", "")
+                        }
+                    },
+                    "hidratacao": hidratacao
+                },
+                "mobilidade_higiene": {
+                    "mobilidade": mobilidade,
+                    "higiene": higiene
+                },
                 "medicamentos": medicamentos,
                 "observacoes": observacoes,
-                "usuario": session.get('user', 'Desconhecido')  # Pega o usuário da sessão
+                "cadastrado_por": session.get('user', 'Desconhecido')
             }
 
+            # Adiciona o relatório ao paciente
             paciente["relatorios"].append(relatorio)
+
             return redirect(url_for("ver_relatorios", cpf=cpf))
-        except KeyError as e:
-            return f"<h1>Erro: Campo {e} não encontrado no formulário.</h1>"
+        except Exception as e:
+            return f"<h1>Erro: {str(e)}</h1>"
 
     return render_template("adicionar_relatorio.html", paciente=paciente)
 
+# Rota para visualizar relatório por data
+@app.route("/relatorio_por_data", methods=["GET"])
+def relatorio_por_data():
+    return render_template("relatorio_por_data.html")
+
+# Execução do aplicativo
 if __name__ == "__main__":
     app.run(debug=True)

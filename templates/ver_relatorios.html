@@ -40,7 +40,7 @@
     <div>
         {% for relatorio in paciente['relatorios'] %}
             <div class="relatorio">
-                <div class="titulo">Data: {{ relatorio['data'] }}</div>
+                <div class="titulo">Data: {{ relatorio['data'] }} às {{ relatorio['hora'] }}</div>
                 <div><span class="subtitulo">Responsável:</span> {{ relatorio['responsavel'] }}</div>
                 <div><span class="subtitulo">Cadastrado por:</span> {{ relatorio['cadastrado_por'] }}</div>
                 
@@ -54,7 +54,16 @@
                 <div><span class="subtitulo">Dor:</span> {{ relatorio['estado_geral']['dor'] }}</div>
 
                 <h4>Alimentação e Hidratação:</h4>
-                <div><span class="subtitulo">Refeições:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes'] }}</div>
+                <h5>Refeições:</h5>
+                <div><span class="subtitulo">Café da Manhã:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes']['cafe_da_manha']['nome'] }} 
+                    <br><span class="subtitulo">Observações:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes']['cafe_da_manha']['observacoes'] }}</div>
+                <div><span class="subtitulo">Almoço:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes']['almoco']['nome'] }} 
+                    <br><span class="subtitulo">Observações:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes']['almoco']['observacoes'] }}</div>
+                <div><span class="subtitulo">Café da Tarde:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes']['cafe_da_tarde']['nome'] }} 
+                    <br><span class="subtitulo">Observações:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes']['cafe_da_tarde']['observacoes'] }}</div>
+                <div><span class="subtitulo">Jantar:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes']['jantar']['nome'] }} 
+                    <br><span class="subtitulo">Observações:</span> {{ relatorio['alimentacao_hidratacao']['refeicoes']['jantar']['observacoes'] }}</div>
+
                 <div><span class="subtitulo">Hidratação:</span> {{ relatorio['alimentacao_hidratacao']['hidratacao'] }}</div>
 
                 <h4>Mobilidade e Higiene:</h4>
